@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!--        /* macro tags  */-->
+<style>
+    body{
+        font-family: monospace;
+        /*background-image: url("http://192.168.2.185:81/stream");*/
+        /*background-position: center;*/
+        /*background-repeat: no-repeat;*/
+         /*background-color: #cccccc;*/
+    }
+   input{
+    color: transparent;
+    border: 0px;
+    width: 0px;
+     }
+</style>
+
+<!--        /* container  */-->
+<style>
+.item1 { grid-area: header; }
+.item2 { grid-area: left-up; }
+.item22 { grid-area: left-down; }
+.item3 { grid-area: main; }
+.item4 { grid-area: right-up; }
+.item44 { grid-area: right-down; }
+.item_footer_left { grid-area: footer_left; }
+.item_footer_center { grid-area: footer_center; }
+.item_footer_right { grid-area: footer_right; }
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'header header header header header header'
+    'left-up main main main main right-up'
+    'left-up  main main main main right-up'
+    'left-down  main main main main right-down'
+    'left-down  main main main main right-down'
+    'footer_left footer_center footer_center footer_center footer_center footer_right';
+  gap: 10px;
+  /*background-color: #ffffff;*/
+  background-color: transparent;
+  padding: 10px;
+}
+.grid-container > div {
+  /*background-color: rgba(255, 255, 255, 0.8);*/
+    background-color: transparent;
+  text-align: center;
+  align-content: center;
+  /*padding: 20px 0;*/
+  font-size: 30px;
+}
+</style>
+
+<!--        /* game wrapper  */-->
+<style>
+
+
+        .game-wrapper{display: flex;flex-direction: row;align-items: center;gap: 50px;justify-content: center;}
+        .game-wrapper.relative {position: relative;text-align: center;align-content: center;}
+        .joystick-wrapper{text-align: center;display: grid;grid-template-columns: repeat(3, 100px);grid-template-rows: repeat(3, 100px); }
+        .arrow {margin: auto;width: 0;height: 0; border-left: 50px solid transparent;border-right: 50px solid transparent;border-bottom: 50px solid black;cursor: pointer; }
+        .arrow:hover{border-bottom: 50px solid rgb(33, 225, 243);}
+        .joystick-wrapper div:nth-of-type(2){transform: rotate(-90deg);}
+        .joystick-wrapper div:nth-of-type(3){transform: rotate(90deg);}
+        .joystick-wrapper div:nth-of-type(4){transform: rotate(180deg);}
+        .pressed{border-bottom: 50px solid rgb(255, 255, 255);}
+        .pressed:hover{border-bottom: 50px solid rgb(255, 255, 255);}
+        .recenter:hover{ color: #2196F3}
+
+</style>
+
+<!--        /* grid-container-item AND grid-item  */-->
+<style>
+    .grid-container-item {display: grid;grid-template-columns: auto auto auto;padding: 10px;}
+    .grid-item {font-size: 30px;text-align: center;}
+</style>
+
+<!--    /* The switch - the box around the slider */-->
+<style>
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #2196F3;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: white;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #white;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+
+</head>
+<body>
+
+<div class="grid-container">
+      <div class="item1" style="font-size: 1em; color: blue;font-style: italic;">
+          <div style="float:right">Connected in {{ap_wifi}} mode to the address {{ip}}</div>
+          <div style="text-align: left;"><a href="/config">Go to Settings</a></div>
+          <div style="font-size:2em;">Distance:<a id="id_distance"></a>cm</div>
+      </div>
+      <div class="item2" id="dashboard-left">Camera
+            <form id="myform_camera" action="/camera" method="GET">
+                <input id="camera_control" type="input" value="" name="camera_control" />
+                <input id="event_form_camera" type="input" value="" name="event_form_camera" />
+            </form>
+      </div>
+      <div class="item22 grid-container-item"><div class="grid-item"></div>
+          <div class="grid-item"><div class="game-wrapper">
+            <div class="joystick-wrapper">
+                <p></p><div class="arrow" id="ArrowUp-Left"></div>
+                <p></p><div class="arrow" id="ArrowLeft-Left"></div>
+                <p id="camera_center" class="recenter" style="justify-content: center;display: flex;">CENTER</p>
+                <div class="arrow" id="ArrowRight-Left"></div>
+                <p></p>
+                <div class="arrow" id="ArrowDown-Left"></div>
+            <p></p></div>
+            </div></div>
+          <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div> <div class="grid-item"></div>
+      </div>
+      <div class="item3" style="display: flex; justify-content: space-evenly; align-content: space-around; flex-wrap: nowrap;">
+
+<!--       <img id="video_stream_front" src="http://192.168.2.243:81/stream"  alt=""/> -->
+<!--       <img hidden id="video_stream_back" src="http://192.168.2.39:81/stream"  alt=""/> -->
+
+      <img id="video_stream_front" src="http://{{front_camera_ip}}:81/stream"  alt=""/>
+      <img hidden id="video_stream_back" src="http://{{back_camera_ip}}:81/stream"  alt=""/>
+
+<!--          src="http://192.168.2.185:81/stream"-->
+
+    </div>
+      <div class="item4" id="dashboard-right">Motor
+            <form id="myform_motor" action="/motor" method="GET">
+                <input id="motor_control" type="input" value="" name="motor_control" />
+                <input id="event_form_motor" type="input" value="" name="event_form_motor" />
+            </form>
+      </div>
+      <div class="item44 grid-container-item">
+          <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
+          <div class="grid-item"><div class="game-wrapper">
+            <div class="joystick-wrapper">
+            <p></p><div class="arrow" id="ArrowUp-Right"></div>
+            <p></p><div class="arrow" id="ArrowLeft-Right"></div>
+            <p id="motor_stop" class="recenter" style="justify-content: center;display: flex;">STOP</p>
+            <div class="arrow" id="ArrowRight-Right"></div><p></p><div class="arrow" id="ArrowDown-Right"></div>
+            <p></p></div>
+            </div></div>
+          <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
+      </div>
+
+    <div class="item_footer_left">
+        <i style="font-family: monospace;font-size: .55em; ">front motor</i>
+        <!-- Rounded switch -->
+        <label class="switch">
+          <input type="checkbox" name="front_back" id="front_back_control" value="front">
+          <span class="slider round"></span>
+        </label>
+        <i style="font-family: monospace;font-size: .55em;">back motor</i>
+
+    </div>
+    <div class="item_footer_center">
+        <i style="font-family: monospace;font-size: .55em;">front camera</i>
+        <!-- Rounded switch -->
+        <label class="switch">
+          <input type="checkbox" name="front_back" id="front_back_camera" value="front">
+          <span class="slider round"></span>
+        </label>
+        <i style="font-family: monospace;font-size: .55em;">back camera</i>
+
+    </div>
+    <div class="item_footer_right">  </div>
+
+<!-- </form>-->
+</div>
+
+<script>
+            arrows = document.querySelectorAll(".arrow");
+            camera_control = document.getElementById("camera_control");
+            motor_control = document.getElementById("motor_control");
+            keepMoving = null;
+            const stopMove = () => {
+                clearInterval(keepMoving)
+                keepMoving = null;
+                arrows.forEach((arrow)=>{ arrow.classList.remove("pressed") })}
+            const write_on_dashboard = (direction) => {
+                debugger;
+                arrow_value = document.getElementById(direction).id
+                switch (arrow_value) {
+                    // cases for motor
+                    case "ArrowUp-Right":
+                        document.getElementById("motor_control").value = "up"; submitFormAjaxMotor("up");
+                         break;
+                    case "ArrowDown-Right":
+                        document.getElementById("motor_control").value = "down"; submitFormAjaxMotor("down");
+                         break;
+                    case "ArrowRight-Right":
+                        document.getElementById("motor_control").value = "right"; submitFormAjaxMotor("right");
+                         break;
+                    case "ArrowLeft-Right":
+                        document.getElementById("motor_control").value = "left"; submitFormAjaxMotor("left");
+                         break;
+                    case "motor_stop":
+                        document.getElementById("motor_control").value = "stop"; submitFormAjaxMotor("stop");
+                         break;
+                    // cases for camera
+                    case "ArrowUp-Left":
+                        document.getElementById("camera_control").value = "up"; submitFormAjaxCamera("up",document.getElementById("front_back_control").value);
+                         break;
+                    case "ArrowDown-Left":
+                        document.getElementById("camera_control").value = "down"; submitFormAjaxCamera("down",document.getElementById("front_back_control").value);
+                         break;
+                    case "ArrowRight-Left":
+                        document.getElementById("camera_control").value = "right"; submitFormAjaxCamera("right",document.getElementById("front_back_control").value);
+                         break;
+                    case "ArrowLeft-Left":
+                        document.getElementById("camera_control").value = "left"; submitFormAjaxCamera("left",document.getElementById("front_back_control").value);
+                         break;
+                    case "camera_center":
+                        document.getElementById("camera_control").value = "center"; submitFormAjaxCamera("center",document.getElementById("front_back_control").value);
+                         break;
+
+
+
+                // right_left = document.getElementById(direction).id.split("-")[1]
+                // arrow_value = document.getElementById(direction).id.split("-")[0]
+                //
+                // // debugger
+                // switch (arrow_value) {
+                //     case "ArrowUp":
+                //         console.log("ArrowUp")
+                //         if (right_left=="Right"){document.getElementById("motor_control").value = "up"; submitFormAjaxMotor("up")} else{document.getElementById("camera_control").value = "up"; submitFormAjaxCamera("up",document.getElementById("front_back_control").value)} break;
+                //     case "ArrowDown":
+                //         console.log("ArrowDown")
+                //         if (right_left=="Right"){document.getElementById("motor_control").value = "down"; submitFormAjaxMotor("down")} else{document.getElementById("camera_control").value = "down"; submitFormAjaxCamera("down",document.getElementById("front_back_control").value)} break;
+                //     case "ArrowRight":
+                //         console.log("ArrowRight")
+                //         if (right_left=="Right"){document.getElementById("motor_control").value = "right"; submitFormAjaxMotor("right")} else{document.getElementById("camera_control").value = "right"; submitFormAjaxCamera("right",document.getElementById("front_back_control").value)} break;
+                //     case "ArrowLeft":
+                //         console.log("ArrowLeft")
+                //         if (right_left=="Right"){document.getElementById("motor_control").value = "left"; submitFormAjaxMotor("left")} else{document.getElementById("camera_control").value = "left"; submitFormAjaxCamera("left",document.getElementById("front_back_control").value)} break;
+
+                }
+                // document.getElementById("myform").submit();
+            }
+
+            function eventhandler(event){
+                event.preventDefault();
+                console.log("event.type:")
+                console.log(event.type)
+                const direction = event.target.getAttribute('id') || event.key;
+                if(event.type == 'mousedown'){
+                    document.getElementById("event_form_camera").value = "mousedown"
+                    document.getElementById("event_form_motor").value = "mousedown"
+
+                    write_on_dashboard(direction)
+                    console.log("inside mousedown")
+
+                }
+                else if(event.type == 'mouseup'){
+                    document.getElementById("event_form_camera").value = "mouseup"
+                    document.getElementById("event_form_motor").value = "mouseup"
+                    // write_on_dashboard(direction)
+                    console.log("inside mouseup")
+                }
+                else if(event.type == 'click'){
+                    console.log("inside click")
+                }
+                else{
+                    submitFormAjax(event)
+                }
+
+            }
+
+            arrows.forEach((arrow) => {
+                arrow.addEventListener('click',eventhandler)
+                arrow.addEventListener('mousedown', eventhandler)
+                arrow.addEventListener('mouseup', eventhandler)
+            })
+            recenter = document.querySelectorAll(".recenter");
+            recenter.forEach((recenter) => {
+                recenter.addEventListener('click',eventhandler)
+                recenter.addEventListener('mousedown', eventhandler)
+                recenter.addEventListener('mouseup', eventhandler)
+            })
+</script>
+
+<script>
+      function submitFormAjaxCamera(position,front_back) {
+         var ajxForm = document.getElementById("myform_camera");
+
+         console.log("front_back:");
+         console.log(front_back);
+         var data = new FormData(ajxForm);
+         var xhr = new XMLHttpRequest();
+
+         xhr.open("GET", "/camera?camera_control=" + position + "?front_back=" + front_back);
+         xhr.send(data);
+         xhr.onload = function() {
+            // alert("Submitted");
+         };
+         return false;
+      }
+      function submitFormAjaxMotor(position) {
+         var ajxForm = document.getElementById("myform_motor");
+         console.log("submitFormAjaxMotor")
+         var data = new FormData(ajxForm);
+         var xhr = new XMLHttpRequest();
+         xhr.open("GET", "/motor?motor_control="+position);
+         xhr.send(data);
+         xhr.onload = function() {
+            // alert("Submitted");
+         };
+         return false;
+      }
+   </script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    function switchcamera(event){
+        // event.preventDefault();
+        // console.log(event)
+        target_id = event.target.getAttribute('id')
+        target = document.getElementById(target_id);
+        // debugger;
+        if (target.value == "front"){
+            target.value = "back"
+            document.getElementById("video_stream_front").hidden = true
+            document.getElementById("video_stream_back").hidden = false
+        }
+        else if (target.value == "back"){
+            target.value = "front"
+            document.getElementById("video_stream_front").hidden = false
+            document.getElementById("video_stream_back").hidden = true
+        }
+        console.log(target.value)
+
+    }
+
+    function switchcameramotor(event){
+        // event.preventDefault();
+        // console.log(event)
+        target_id = event.target.getAttribute('id')
+        target = document.getElementById(target_id);
+        // debugger;
+        if (target.value == "front"){
+            target.value = "back"
+
+        }
+        else if (target.value == "back"){
+            target.value = "front"
+
+        }
+        console.log(target.value)
+
+    }
+
+    front_back_camera = document.getElementById("front_back_camera");
+    front_back_camera.addEventListener('click',switchcamera)
+
+    front_back_camera_motor = document.getElementById("front_back_control");
+    front_back_camera_motor.addEventListener('click',switchcameramotor)
+
+
+</script>
+
+<script>
+    distance_element = document.getElementById("id_distance")
+    var feedback = ""
+    function autoCallComplete() {
+    debugger;
+        // $('#log_complete').append('<li>autoCallComplete() method complete</li>');
+         feedback = $.ajax({
+            type: "GET",
+            url: "distance",
+            async: false
+        }).complete(function () {
+            setTimeout(function () {
+                autoCallComplete();
+            }, 500);
+        }).responseText;
+        console.log("called")
+        distance_element.innerHTML = feedback
+    }
+  //  $(function () {
+    autoCallComplete();
+//    });
+
+
+</script>
+
+</body>
+</html>

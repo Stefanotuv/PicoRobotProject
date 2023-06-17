@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Connect to Network</title>
+<style>
+  #box {
+    width: 500px;
+    height: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .row label {
+    width: 100px;
+  }
+  .row input[type="password"],
+  .row input[type="text"],
+  select {
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-left: 20px;
+    flex: 1;
+    box-sizing: border-box;
+  }
+  .row .toggle-password {
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  select {
+    width: calc(100% - 10px);
+  }
+  button {
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #4caf50;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  button.active {
+    background-color: #4caf50;
+  }
+  button.inactive {
+    background-color: #aaa;
+  }
+
+</style>
+
+
+  </head>
+  <body>
+    <div id="box">
+      <h2>Connect to Network</h2>
+      <form action="/connect" method="POST" id="myform">
+          <div class="row">
+            <label for="ssid">SSID:</label><br>
+            <select id="ssid" name="ssid">
+              <option value="" disabled selected>Select a network</option>
+            </select>
+           </div> 
+          <div class="row">           
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br><br>
+           </div>           
+            <button id="ap" class="active" name="button_ap" value="button_ap">Connect using AP</button>
+            <button id="wifi" class="inactive" disabled name="button_wifi" value="button_wifi">Connect using WiFi</button>
+
+      </form>
+    </div>
+<script>
+  const ssid = document.getElementById("ssid");
+  const password = document.getElementById("password");
+  const ap = document.getElementById("ap");
+  const wifi = document.getElementById("wifi");
+  const togglePassword = document.querySelector(".toggle-password");  
+  const wifi_list_string = "{{ wifi_networks_options }}"
+  wifi_list = wifi_list_string.split("---")
+  
+  select = document.getElementById("ssid");
+  
+  for (i=0; i<wifi_list.length; i++ ){
+      opt = document.createElement("option")
+      opt.value = wifi_list[i]
+      opt.innerText = wifi_list[i]
+      select.add(opt)
+  }
+
+
+  ssid.addEventListener("change", () => {
+    password.style.display = "block";
+  });
+
+  password.addEventListener("keyup", () => {
+    if (ssid.value && password.value) {
+      wifi.classList.add("active");
+      wifi.classList.remove("inactive");
+      wifi.removeAttribute("disabled");
+    } else {
+      wifi.classList.add("inactive");
+      wifi.classList.remove("active");
+      wifi.setAttribute("disabled", true);
+    }
+  });
+
+  togglePassword.addEventListener("click", () => {
+    const type = password.getAttribute("type") === "password" ? "text" : "password";
+    password.setAttribute("type", type);
+    togglePassword.classList.toggle("fa-eye-slash");
+  });
+
+
+</script>
+  </body>
+</html>

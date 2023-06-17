@@ -1,0 +1,1 @@
+{"ssid": "micasa", "ap_wifi": "wifi", "front_camera_ip": "192.168.2.185", "back_camera_ip": "192.168.2.39", "password": "Lily05032020"}

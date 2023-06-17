@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+
+<!--        /* macro tags  */-->
+<style>
+    body{
+        font-family: monospace;
+        /*background-image: url("http://192.168.2.185:81/stream");*/
+        /*background-position: center;*/
+        /*background-repeat: no-repeat;*/
+         /*background-color: #cccccc;*/
+    }
+   .button {
+    font-size: 16px;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #43727a;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-right: 10px;
+       width:15%;
+       justify-content: center;
+  }
+  button {
+      font-family: monospace;
+    font-size: 16px;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #215cf3;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-right: 10px;
+  }
+  button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  button.active {
+    background-color: #4caf50;
+  }
+  button.inactive {
+    background-color: #aaa;
+  }
+   /*input{*/
+   /* color: transparent;*/
+   /* border: 0px;*/
+   /* width: 0px;*/
+   /*  }*/
+</style>
+
+<!--        /* container  */-->
+<style>
+.item1 { grid-area: header; }
+.option1 { grid-area: option1; }
+.value1 { grid-area: value1;     text-align: left;}
+.option2 { grid-area: option2; }
+.value2 { grid-area: value2;     text-align: left;}
+.option3 { grid-area: option3; }
+.value3 { grid-area: value3;     text-align: left;}
+.option4 { grid-area: option4; }
+.value4 { grid-area: value4;     text-align: left;}
+.option5 { grid-area: option5; }
+.value5 { grid-area: value5;     text-align: left;}
+.option6 { grid-area: option6; }
+.value6 { grid-area: value6;     text-align: left;}
+
+
+.item_footer_center { grid-area: footer_center; }
+.item_footer_right { grid-area: footer_right; }
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'header header header header header header header header header header header header'
+    'option1  value1 value1 value1 value1 value1 value1 value1 value1 value1 value1 value1'
+    'option2  value2 value2 value2 value2 value2 value2 value2 value2 value2 value2 value2'
+    'option3  value3 value3 value3 value3 value3 value3 value3 value3 value3 value3 value3'
+    'option4  value4 value4 value4 value4 value4 value4 value4 value4 value4 value4 value4'
+    'option5  value5 value5 value5 value5 value5 value5 value5 value5 value5 value5 value5'
+    'option6  value6 value6 value6 value6 value6 value6 value6 value6 value6 value6 value6';
+    /*'footer_left footer_left footer_center footer_center footer_center footer_center footer_right';*/
+  gap: 10px;
+
+  /*background-color: #ffffff;*/
+  background-color: transparent;
+  padding: 10px;
+
+}
+.grid-container > div {
+  /*background-color: rgba(255, 255, 255, 0.8);*/
+    background-color: transparent;
+  text-align: center;
+  align-content: center;
+  /*padding: 20px 0;*/
+  font-size: 30px;
+
+}
+</style>
+
+<!--        /* game wrapper  */-->
+<style>
+
+
+        .game-wrapper{display: flex;flex-direction: row;align-items: center;gap: 50px;justify-content: center;}
+        .game-wrapper.relative {position: relative;text-align: center;align-content: center;}
+        .joystick-wrapper{text-align: center;display: grid;grid-template-columns: repeat(3, 100px);grid-template-rows: repeat(3, 100px); }
+        .arrow {margin: auto;width: 0;height: 0; border-left: 50px solid transparent;border-right: 50px solid transparent;border-bottom: 50px solid black;cursor: pointer; }
+        .arrow:hover{border-bottom: 50px solid rgb(33, 225, 243);}
+        .joystick-wrapper div:nth-of-type(2){transform: rotate(-90deg);}
+        .joystick-wrapper div:nth-of-type(3){transform: rotate(90deg);}
+        .joystick-wrapper div:nth-of-type(4){transform: rotate(180deg);}
+        .pressed{border-bottom: 50px solid rgb(255, 255, 255);}
+        .pressed:hover{border-bottom: 50px solid rgb(255, 255, 255);}
+        .recenter:hover{ color: #2196F3}
+
+</style>
+
+<!--        /* grid-container-item AND grid-item  */-->
+<style>
+    .grid-container-item {display: grid;grid-template-columns: auto auto auto;padding: 10px;}
+    .grid-item {font-size: 30px;text-align: center;}
+</style>
+
+<!--    /* The switch - the box around the slider */-->
+<style>
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  /*height: 34px;*/
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #2196F3;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: white;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #white;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-style: solid;
+    border-width: thin;
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+<style>
+select{
+    border-width: 1px;
+    border-style: inset;
+    width:20em;
+    height:1.6em;
+}
+
+</style>
+</head>
+<body>
+<form action="" method="POST">
+<div class="grid-container" style="">
+      <div class="item1" style="font-size: 1em; color: blue;font-style: italic;">
+          <div style="float:right">Connected in {{ap_wifi}} mode to the address {{ip}}</div>
+          <div style="text-align: left;"><a href="/connect">Go Back to the App</a></div>
+      </div>
+    <div class="option1" id="2" style="text-align: left; font-size: 1.5em">AP or WiFi Mode start-up</div>
+    <div class="value1" id="3" style="text-align: left; font-size: 1.5em;">
+        <i style="font-family: monospace;font-size: 1em;">AP</i>
+        <!-- Rounded switch -->
+        <label class="switch">
+          <input type="checkbox" name="ap_wifi" id="ap_wifi" value="{{ap_wifi}}" onclick=clickToggle(event)>
+          <span class="slider round"></span>
+        </label>
+        <i style="font-family: monospace;font-size: 1em;">WiFi</i>
+    </div>
+    <div class="option2" id="4" style="text-align: left; font-size: 1.5em;">Default SSID for Wifi</div>
+    <div class="value2" id="5" style="text-align: left; font-size: 1.5em;">
+            <select id="ssid" name="ssid">
+              <option value="" disabled selected>Select a network</option>
+            </select>
+
+<!--        <input id="ssid" name="ssid" type="text" value="{{ssid}}"/>-->
+    </div>
+    <div class="option3" id="6" style="text-align: left; font-size: 1.5em;">WiFi Password</div>
+    <div class="value3" id="7" style="text-align: left; font-size: 1.5em;">
+        <input id="password" name="password" type="password" value="{{password}}"/>
+        <input type="checkbox" onclick="showpassword(event)" value="off"> show password </input>
+    </div>
+    <div class="option4" id="8" style="text-align: left; font-size: 1.5em;">Front Camera IP</div>
+    <div class="value4" id="9" style="text-align: left; font-size: 1.5em;">
+        <input id="front_camera_ip" name="front_camera_ip" type="text" value="{{front_camera_ip}}"/>
+    </div>
+    <div class="option5" id="10" style="text-align: left; font-size: 1.5em;">Back Camera IP</div>
+    <div class="value5" id="11" style="text-align: left; font-size: 1.5em;">
+        <input id="back_camera_ip" name="back_camera_ip" type="text" value="{{back_camera_ip}}" />
+    </div>
+    <div class="option6" id="12" style=" font-size: 1.5em; justify-content: center; display: flex;">
+        <div class="button" ><a href="/connect" style="color: #f2f2f2;text-decoration:none;">Back</a></div>
+    </div>
+    <div class="value6" id="13" style="text-align: left; font-size: 1.5em;">
+        <button name="save" value="save">Save</button>
+        <button name="save_restart" value="save_restart">Save & Restart</button>
+    </div>
+    <!-- </form>-->
+</div>
+</form>
+<script>
+
+    select = document.getElementById("ssid");
+    const wifi_list_string = "{{ wifi_networks_options }}"
+    const wifi_selected = "{{ ssid }}"
+    wifi_list = wifi_list_string.split("---")
+    for (i=0; i<wifi_list.length; i++ ){
+      opt = document.createElement("option")
+      opt.value = wifi_list[i]
+      opt.innerText = wifi_list[i]
+      select.add(opt)
+  }
+      if (wifi_list_string.includes(wifi_selected)){
+          const text = wifi_selected;
+          const $select = document.querySelector('#ssid');
+          const $options = Array.from($select.options);
+          const optionToSelect = $options.find(item => item.text ===text);
+          optionToSelect.selected = true;
+    }
+    else{
+          const text = wifi_selected;
+          const $select = document.querySelector('#ssid');
+          const $options = Array.from($select.options);
+          const optionToSelect = $options.find(item => item.text ===text);
+          optionToSelect.selected = true;
+        opt = document.createElement("option")
+        opt.value = wifi_selected
+        opt.innerText = wifi_selected
+        select.add(opt)
+    }
+
+
+</script>
+<script>
+      function clickToggle(event) {
+        debugger;
+        ap_wifi = document.getElementById("ap_wifi")
+        if (ap_wifi.value=="ap"){
+            ap_wifi.value = "wifi"
+
+        }
+        else if (ap_wifi.value=="wifi"){
+            // ap_wifi.value = "off"
+            ap_wifi.value = "ap"
+        }
+        else if (ap_wifi.value=="wifi_initial"){
+            // ap_wifi.value = "off"
+            ap_wifi.value = "wifi"
+        }        
+        else{
+            ap_wifi.value = "ap"
+        }
+         return false;
+      }
+   //    execute initial code to toggle to wifi in case the initial value is wifi and not ap
+      ap_wifi = document.getElementById("ap_wifi")
+      if (ap_wifi.value=="wifi"){
+            debugger; 
+            ap_wifi.value="wifi_initial"
+            ap_wifi.click()
+      }
+
+   </script>
+
+<script>
+    function showpassword(event){
+        debugger;
+        psw = document.getElementById("password")
+        checkbox = event.target
+        if (checkbox.value=="off"){
+            checkbox.value = "on"
+            psw.type = "text"
+        }
+        else if (checkbox.value=="on"){
+            checkbox.value = "off"
+            psw.type = "password"
+        }
+        else{
+
+        }
+    }
+
+</script>
+</body>
+</html>
