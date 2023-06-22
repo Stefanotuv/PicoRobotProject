@@ -1,0 +1,32 @@
+remote connection
+
+ssh -R 0.0.0.0:8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+ssh -R \*:8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+ssh -R 8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+
+ssh -R 0.0.0.0:8080:192.168.2.235:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+ssh -R 0.0.0.0:8080:192.168.2.235:81 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+
+put address /stream
+
+192.168.2.235
+
+# ssh -L0.0.0.0:8080:localhost:80 ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+
+sudo nano /etc/ssh/sshd_config
+GatewayPorts yes
+AllowTcpForwarding yes
+
+sudo apt-get install iptables-persistent
+# sudo iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 8080 -j ACCEPT
+
+sudo iptables -I INPUT 5 -p tcp --dport 8080 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo iptables -I INPUT 5 -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo iptables -I INPUT 5 -p tcp --dport 81 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo netfilter-persistent save
+
+
+ssh ubuntu@130.162.182.123 -i /Users/stefano/.ssh/id_oci_test
+
+sudo apt-get update && sudo apt-get upgrade -y
