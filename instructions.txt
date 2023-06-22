@@ -1,15 +1,21 @@
-remote connection
+supporting documentation
+https://github.com/simonprickett/phewap
+https://github.com/pimoroni/phew
+
+ssh ubuntu@130.162.182.123 -i /Users/stefano/.ssh/id_oci_test
+sudo apt-get update && sudo apt-get upgrade -y
+
+for remote connection using Oracle Cloud
 
 ssh -R 0.0.0.0:8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
-ssh -R \*:8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
-ssh -R 8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+ssh -R 0.0.0.0:8080:localhost:81 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+# ssh -R \*:8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
+# ssh -R 8080:localhost:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
 
 ssh -R 0.0.0.0:8080:192.168.2.235:80 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
 ssh -R 0.0.0.0:8080:192.168.2.235:81 -N ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
 
-put address /stream
-
-192.168.2.235
+public_address:8080/stream
 
 # ssh -L0.0.0.0:8080:localhost:80 ubuntu@130.162.182.123 -i /home/stefano/.ssh/id_oci_test
 
@@ -27,6 +33,3 @@ sudo iptables -I INPUT 5 -p tcp --dport 81 -m conntrack --ctstate NEW,ESTABLISHE
 sudo netfilter-persistent save
 
 
-ssh ubuntu@130.162.182.123 -i /Users/stefano/.ssh/id_oci_test
-
-sudo apt-get update && sudo apt-get upgrade -y
