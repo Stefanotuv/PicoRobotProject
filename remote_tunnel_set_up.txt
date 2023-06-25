@@ -1,0 +1,32 @@
+supporting documentation
+https://github.com/simonprickett/phewap
+https://github.com/pimoroni/phew
+
+# create a VM on Oracle CLoud. I have not tested on any other cloud provider, so something may not work
+# in particular other ubuntu image may use ufw instead of iptables
+# save the public and private keys so that you can use for the local server
+# transfer the key to the local sever
+
+ssh ubuntu@140.238.121.1 -i /Users/stefano/.ssh/id_oci_test
+sudo apt-get update && sudo apt-get upgrade -y
+
+sudo nano /etc/ssh/sshd_config
+    GatewayPorts yes
+    AllowTcpForwarding yes
+
+sudo apt-get install iptables-persistent
+sudo iptables -I INPUT 5 -p tcp --dport 8080 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo netfilter-persistent save
+
+ssh -R 0.0.0.0:8080:localhost:80 -N ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+ssh -R 0.0.0.0:8080:localhost:81 -N ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+# ssh -R \*:8080:localhost:80 -N ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+# ssh -R 8080:localhost:80 -N ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+
+ssh -R 0.0.0.0:8080:192.168.2.235:80 -N ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+ssh -R 0.0.0.0:8080:192.168.2.235:81 -N ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+
+public_address:8080/stream
+
+# ssh -L0.0.0.0:8080:localhost:80 ubuntu@140.238.121.1 -i /home/stefano/.ssh/id_oci_test
+

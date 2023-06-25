@@ -24,6 +24,8 @@ GatewayPorts yes
 AllowTcpForwarding yes
 
 sudo apt-get install iptables-persistent
+sudo iptables -I INPUT 5 -p tcp --dport 8080 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo netfilter-persistent save
 # sudo iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
 sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 8080 -j ACCEPT
 
