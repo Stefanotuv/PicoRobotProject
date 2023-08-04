@@ -27,10 +27,10 @@ class Servo:
     #    def position(self, value):
     #         self.pwm.duty_ns(value)
 
-    def right(self):
+    def right(self, input=20):
         print("RIGHT")
         print(f'name pin: {self.name}')
-        value = int(self.current_pos - int(MID / 10))
+        value = int(self.current_pos - int(MID / input))
         print(f'value before: {value}')
         if value > MAX:
             value = MAX
@@ -39,10 +39,10 @@ class Servo:
         # self.pwm.duty_u16(value)
         print(f'value after: {value}')
 
-    def left(self):
+    def left(self, input=20):
         print("LEFT")
         print(f'name pin: {self.name}')
-        value = int(self.current_pos + int(MID / 10))
+        value = int(self.current_pos + int(MID / input))
         print(f'value before: {value}')
         if value < MIN:
             value = MIN
@@ -51,10 +51,10 @@ class Servo:
         # self.pwm.duty_u16(value)
         print(f'value after: {value}')
 
-    def down(self):
+    def down(self, input=20):
         print("DOWN")
         print(f'name pin: {self.name}')
-        value = int(self.current_pos + int(MID / 10))
+        value = int(self.current_pos + int(MID / input))
         print(f'value before: {value}')
         if value > MAX:
             value = MAX
@@ -63,10 +63,10 @@ class Servo:
         # self.pwm.duty_u16(value)
         print(f'value after: {value}')
 
-    def up(self):
+    def up(self, input=20):
         print("UP")
         print(f'name pin: {self.name}')
-        value = int(self.current_pos - int(MID / 10))
+        value = int(self.current_pos - int(MID / input))
         print(f'value before: {value}')
         if value < MIN:
             value = MIN
